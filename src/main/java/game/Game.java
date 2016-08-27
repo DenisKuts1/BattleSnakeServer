@@ -1,6 +1,7 @@
 package game;
 
 import server.Message;
+import server.Session;
 
 
 import java.io.IOException;
@@ -97,28 +98,34 @@ public class Game {
                     } else {
                         desk.drawUser(user);
                     }
-                    Card card = null;
-                    Label:
-                    for (Card c : user.getSnake().getCards()) {
-                        for (int i = 0; i < 3; i++) {
-                            if (desk.checkCard(c)) {
-                                card = c;
-                                break Label;
-                            }
-                            c = c.rotate();
+                }
+                Card card = null;
+                Label:
+                for (Card c : user.getSnake().getCards()) {
+                    for (int i = 0; i < 3; i++) {
+                        if (desk.checkCard(c)) {
+                            card = c;
+                            break Label;
                         }
+                        c = c.rotate();
                     }
-                    if (card != null) {
-                        moveSnake(desk, user, card.getDirection());
-                    } else {
-                        Card.Direction direction = desk.getRandomMove();
-                        if (direction != null) {
-                            moveSnake(desk, user, direction);
-                        }
+                }
+                if (card != null) {
+                    moveSnake(desk, user, card.getDirection());
+                } else {
+                    Card.Direction direction = desk.getRandomMove();
+                    if (direction != null) {
+                        moveSnake(desk, user, direction);
                     }
-                    sendProgress(desk, false);
+                }
+                sendProgress(desk, false);
+                try {
+                    Thread.sleep(1000);
+                }catch (Exception e){
+
                 }
             }
+
             users.stream().filter(user -> user.getSnake().getBody().size() < 3).forEach(user -> users.remove(user));
             if (users.size() == 1) {
                 stop = true;
@@ -132,6 +139,7 @@ public class Game {
 
             }
         }
+        Session.stopGame(this, port);
 
     }
 
