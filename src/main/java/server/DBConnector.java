@@ -1,5 +1,6 @@
 package server;
 
+import client_server_I_O.classes.Snake;
 import client_server_I_O.classes.User;
 
 import java.io.*;
@@ -111,12 +112,13 @@ public class DBConnector {
         return true;
     }
 
-    public ArrayList<String> getUsers() {
+    public ArrayList<Snake> getUsers() {
         String name;
-        ArrayList<String> arrayList = new ArrayList<>();
+        ArrayList<Snake> arrayList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(usersFile))) {
             while ((name = reader.readLine()) != null) {
-                arrayList.add(name);
+                User user = getUser(name);
+                arrayList.add(user.getSnake());
             }
         } catch (IOException e) {
         }
