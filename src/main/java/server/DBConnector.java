@@ -1,6 +1,6 @@
 package server;
 
-import game.User;
+import client_server_I_O.classes.User;
 
 import java.io.*;
 import java.util.ArrayList;

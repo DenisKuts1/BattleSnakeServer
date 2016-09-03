@@ -1,7 +1,7 @@
 package server;
 
-import game.Game;
-import game.User;
+import client_server_I_O.Game;
+import client_server_I_O.classes.User;
 
 import java.io.*;
 import java.net.Socket;
@@ -53,6 +53,7 @@ public class Session implements Runnable {
     public void run() {
         Message message;
         while ((message = readMessage()) != null) {
+            System.out.println(1);
             String firstUnit = (String) message.getUnit();
             switch (firstUnit) {
                 case "add": {
@@ -83,11 +84,6 @@ public class Session implements Runnable {
                     startGame((String) message.getUnit(), (String) message.getUnit(), (String) message.getUnit(), (String) message.getUnit());
                     break;
                 }
-                case "join": {
-
-                }
-
-
             }
         }
 
@@ -104,7 +100,7 @@ public class Session implements Runnable {
                 connector.getUser(user2),
                 connector.getUser(user3),
                 connector.getUser(user4));
-        Message message = new Message().addUnit(port);
+        Message message = new Message(port);
         synchronized (games) {
             games.add(game);
         }
@@ -117,7 +113,7 @@ public class Session implements Runnable {
     }
 
     private void getUsers() {
-        Message message = new Message().addUnit(connector.getUsers());
+        Message message = new Message(connector.getUsers());
         sendMessage(message);
     }
 
@@ -132,18 +128,18 @@ public class Session implements Runnable {
                 names.put(game.getPort(), name);
             }
         }
-        Message message = new Message().addUnit(names);
+        Message message = new Message(names);
         sendMessage(message);
     }
 
     private void getUser(String login, String password) {
         User user = connector.getUser(login, password);
-        Message message = new Message().addUnit(user);
+        Message message = new Message(user);
         sendMessage(message);
     }
 
     private void addUser(User user) {
-        Message message = new Message().addUnit(connector.addUser(user));
+        Message message = new Message(connector.addUser(user));
         sendMessage(message);
 
 
