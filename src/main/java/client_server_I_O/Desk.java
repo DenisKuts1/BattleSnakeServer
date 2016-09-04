@@ -70,7 +70,7 @@ public class Desk implements Serializable {
         Label:
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 7; j++) {
-                if (card.getCell(i, j).equals(Role.OWN_HEAD)) {
+                if (Role.role(card.getElements()[i][j].getRole()).equals(Role.OWN_HEAD)) {
                     cardHeadX = i;
                     cardHEadY = j;
                     break Label;
@@ -91,7 +91,7 @@ public class Desk implements Serializable {
                 } else {
                     deskRole = matrix[x][y];
                 }
-                Role cardRole = card.getCell(i, j);
+                Role cardRole = Role.role(card.getElements()[i][j].getRole());
                 if (Role.andOrangeRoles.contains(cardRole)) {
                     if (!deskRole.equals(cardRole.getRole())) {
                         andOrange = false;
@@ -169,90 +169,4 @@ public class Desk implements Serializable {
         int random = new Random().nextInt(directions.size());
         return directions.get(random);
     }
-
-
-
-
-
-    /*private Card.Cell[][] matrix;
-
-    public Desk() {
-        matrix = new Card.Cell[20][20];
-    }
-
-    public void draw(Snake... snakes) {
-        for (Card.Cell[] row : matrix) {
-            for (Card.Cell cell : row) {
-                cell = Card.Cell.EMPTY;
-            }
-        }
-        for (Snake snake : snakes) {
-            matrix[snake.getBlock(0).getX()][snake.getBlock(0).getY()] = Card.Cell.HEAD;
-            for (int i = 1; i < snake.getSize() - 2; i++) {
-                matrix[snake.getBlock(i).getX()][snake.getBlock(i).getY()] = Card.Cell.BODY;
-            }
-            matrix[snake.getBlock(snake.getSize() - 1).getX()][snake.getBlock(snake.getSize() - 1).getY()] = Card.Cell.TAIL;
-        }
-    }
-
-    public boolean compare(Snake snake, Card card) {
-        Card.Cell[][] subMatrix = getSubMatrix(snake.getBlock(0).getX(), snake.getBlock(0).getY());
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 7; j++) {
-                if (!subMatrix[i][j].equals(card.getCell(i, j))) {
-                    return false;
-                }
-
-            }
-        }
-        return true;
-
-    }
-
-    public Card.Cell[][] getSubMatrix(int x, int y) {
-        Card.Cell[][] subMatrix = new Card.Cell[7][7];
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 7; j++) {
-                int xx = x - 3 + i;
-                int yy = y - 3 + j;
-                if (xx < 0 || xx > 19 || yy < 0 || yy > 19) {
-                    subMatrix[i][j] = Card.Cell.BORDER;
-                } else {
-                    subMatrix[i][j] = matrix[xx][yy];
-                }
-            }
-        }
-        return subMatrix;
-    }
-
-    public boolean canEat(Snake snake) {
-        int x = snake.getBlock(0).getX();
-        int y = snake.getBlock(0).getY();
-        int xx = snake.getBlock(snake.getSize() - 1).getX();
-        int yy = snake.getBlock(snake.getSize() - 1).getY();
-        if (y != yy) {
-            if (x >= 0 && matrix[x - 1][y].equals(Card.Cell.TAIL)) {
-                return true;
-            }
-
-            if (x < 20 && matrix[x + 1][y].equals(Card.Cell.TAIL)) {
-                return true;
-            }
-        }
-        if (x != xx) {
-            if (y >= 0 && matrix[x][y - 1].equals(Card.Cell.TAIL)) {
-                return true;
-            }
-            if (y < 20 && matrix[x][y + 1].equals(Card.Cell.TAIL)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void randomMove(Snake snake){
-
-    }
-
-*/
 }

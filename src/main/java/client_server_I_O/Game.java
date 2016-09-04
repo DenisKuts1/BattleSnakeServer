@@ -1,23 +1,25 @@
 package client_server_I_O;
 
-import client_server_I_O.classes.Card;
-import client_server_I_O.classes.Snake;
-import client_server_I_O.classes.User;
+import client_server_I_O.classes.*;
 import server.Message;
 import server.Session;
 
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Анатолий on 25.07.2016.
  */
 public class Game {
     ArrayList<User> users;
+    ArrayList<User> allUsers;
     ArrayList<Socket> sockets;
     boolean stop = false;
     int port;
@@ -59,21 +61,18 @@ public class Game {
 
     }
 
-    private void sendProgress(Desk desk, boolean isLast) {
+    private void sendProgress(boolean isLast) {
         Message message;
-        ArrayList<Snake> snakes = new ArrayList<>();
 
-        if (!isLast) {
-            message = new Message("snakes");
-        } else {
-            message = new Message("gameOver");
+        Map<Integer, ArrayList<Block>> body = new HashMap<>();
+        for(int i = 0 ; i < 4; i++){
+            body.put(i,allUsers.get(i).getSnake().getBody());
         }
 
-        for (User user : users) {
-            snakes.add(user.getSnake());
-        }
-
-        message.addUnit(snakes);
+        Step step = new Step();
+        step.setBody(body);
+        step.setGameFinished(isLast);
+        message = new Message(step);
 
         for (Socket socket : sockets) {
             send(socket, message);
@@ -92,14 +91,12 @@ public class Game {
 
     private void loop() {
         Desk desk = new Desk();
-        users.get(0).getSnake().setDirection(Snake.Direction.TOP);
-        users.get(1).getSnake().setDirection(Snake.Direction.RIGHT);
-        users.get(2).getSnake().setDirection(Snake.Direction.BOTTOM);
-        users.get(3).getSnake().setDirection(Snake.Direction.LEFT);
+        allUsers = (ArrayList<User>) users.clone();
+        startPosition(users.get(0).getSnake(), Direction.TOP);
+        startPosition(users.get(1).getSnake(), Direction.RIGHT);
+        startPosition(users.get(2).getSnake(), Direction.BOTTOM);
+        startPosition(users.get(3).getSnake(), Direction.LEFT);
 
-        for (User user : users) {
-            user.getSnake().startPosition();
-        }
         while (!stop) {
             for (User user : users) {
                 desk.clear();
@@ -112,13 +109,16 @@ public class Game {
                 }
                 Card card = null;
                 Label:
-                for (Card c : user.getSnake().getCards()) {
-                    for (int i = 0; i < 3; i++) {
-                        if (desk.checkCard(c)) {
-                            card = c;
-                            break Label;
+                for (Card []cc : user.getSnake().getCards()) {
+                    for (Card c : cc) {
+                        for (int i = 0; i < 3; i++) {
+                            if (desk.checkCard(c)) {
+                                card = c;
+                                break Label;
+                            }
+
+                            c = rotate(c);
                         }
-                        c = c.rotate();
                     }
                 }
                 if (card != null) {
@@ -129,7 +129,7 @@ public class Game {
                         moveSnake(desk, user, direction);
                     }
                 }
-                sendProgress(desk, false);
+                sendProgress(false);
                 try {
                     Thread.sleep(1000);
                 } catch (Exception e) {
@@ -140,9 +140,16 @@ public class Game {
             users.stream().filter(user -> user.getSnake().getBody().size() < 3).forEach(user -> users.remove(user));
             if (users.size() == 1) {
                 stop = true;
+                for(User user : allUsers){
+                    if(user.equals(users.get(0))){
+                        user.getSnake().setRating(user.getSnake().getRating() + 10);
+                    } else {
+                        user.getSnake().setRating(user.getSnake().getRating() - 5);
+                    }
+                }
             }
         }
-        sendProgress(desk, true);
+        sendProgress(true);
         for (Socket socket : sockets) {
             try {
                 socket.close();
@@ -175,7 +182,7 @@ public class Game {
             }
         }
         boolean canEat = desk.canEat(vectorX, vectorY);
-        user.getSnake().move(vectorX, vectorY, canEat);
+        move(user.getSnake(), vectorX, vectorY, canEat);
         if (canEat) {
             for (User enemy : users) {
                 if (!enemy.equals(user)) {
@@ -184,11 +191,100 @@ public class Game {
                     int userX = user.getSnake().getBody().get(0).getX();
                     int userY = user.getSnake().getBody().get(0).getY();
                     if (userX + vectorX == x && userY + vectorY == y) {
-                        enemy.getSnake().gotEaten();
+                        gotEaten(enemy.getSnake());
                     }
                 }
             }
         }
+    }
+
+    //private Direction direction;
+    public void startPosition(Snake snake, Direction direction) {
+        snake.getBody().clear();
+        switch (direction) {
+            case TOP: {
+                snake.getBody().add(new Block(12, 4));
+                snake.getBody().add(new Block(12, 3));
+                snake.getBody().add(new Block(12, 2));
+                snake.getBody().add(new Block(12, 1));
+                snake.getBody().add(new Block(12, 0));
+                break;
+            }
+            case BOTTOM: {
+                snake.getBody().add(new Block(13, 20));
+                snake.getBody().add(new Block(13, 21));
+                snake.getBody().add(new Block(13, 22));
+                snake.getBody().add(new Block(13, 23));
+                snake.getBody().add(new Block(13, 24));
+                break;
+            }
+            case LEFT: {
+                snake.getBody().add(new Block(4, 12));
+                snake.getBody().add(new Block(3, 12));
+                snake.getBody().add(new Block(2, 12));
+                snake.getBody().add(new Block(1, 12));
+                snake.getBody().add(new Block(0, 12));
+                break;
+            }
+            case RIGHT: {
+                snake.getBody().add(new Block(20, 13));
+                snake.getBody().add(new Block(21, 13));
+                snake.getBody().add(new Block(22, 13));
+                snake.getBody().add(new Block(23, 13));
+                snake.getBody().add(new Block(24, 13));
+            }
+        }
+    }
+
+    public void move(Snake snake, int vectorX, int vectorY, boolean hasEaten) {
+        int x = snake.getBody().get(0).getX() + vectorX;
+        int y = snake.getBody().get(0).getY() + vectorY;
+        if (hasEaten) {
+            snake.getBody().add(0, new Block(x, y));
+        } else {
+            snake.getBody().get(snake.getBody().size() - 1).setX(x);
+            snake.getBody().get(snake.getBody().size() - 1).setY(y);
+            snake.getBody().add(0, snake.getBody().get(snake.getBody().size() - 1));
+            snake.getBody().remove(snake.getBody().size() - 1);
+        }
+    }
+
+    public void gotEaten(Snake snake){
+        snake.getBody().remove(snake.getBody().size()-1);
+    }
+
+    public enum Direction implements Serializable {
+        TOP, BOTTOM, LEFT, RIGHT
+    }
+
+
+    public Card rotate(Card card) {
+        Card.Direction d;
+        switch (card.getDirection()) {
+            case LEFT: {
+                d = Card.Direction.FORWARD;
+                break;
+            }
+            case FORWARD: {
+                d = Card.Direction.RIGHT;
+                break;
+            }
+            case RIGHT: {
+                d = Card.Direction.BACKWARD;
+                break;
+            }
+            default: {
+                d = Card.Direction.LEFT;
+            }
+
+        }
+        Card c = new Card(d);
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7; j++) {
+                c.getElements()[i][j].role = card.getElements()[j][7 - i - 1].role;
+            }
+        }
+        return card;
     }
 }
 

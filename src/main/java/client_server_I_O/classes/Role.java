@@ -8,16 +8,30 @@ import java.util.ArrayList;
  */
 public enum Role implements Serializable {
 
-    OWN_HEAD, OWN_BODY, OWN_TAIL, ENEMY_HEAD, ENEMY_BODY, ENEMY_TAIL, BARRIER, EMPTY,
-    A_O_OWN_HEAD, A_O_OWN_BODY, A_O_OWN_TAIL, A_O_ENEMY_HEAD, A_O_ENEMY_BODY, A_O_ENEMY_TAIL, A_O_BARRIER, A_O_EMPTY,
-    A_P_OWN_HEAD, A_P_OWN_BODY, A_P_OWN_TAIL, A_P_ENEMY_HEAD, A_P_ENEMY_BODY, A_P_ENEMY_TAIL, A_P_BARRIER, A_P_EMPTY,
-    OR_OWN_HEAD, OR_OWN_BODY, OR_OWN_TAIL, OR_ENEMY_HEAD, OR_ENEMY_BODY, OR_ENEMY_TAIL, OR_BARRIER, OR_EMPTY,
-    EXCEPT_OWN_HEAD, EXCEPT_OWN_BODY, EXCEPT_OWN_TAIL, EXCEPT_ENEMY_HEAD, EXCEPT_ENEMY_BODY, EXCEPT_ENEMY_TAIL, EXCEPT_BARRIER, EXCEPT_EMPTY;
+    OWN_HEAD(1), OWN_BODY(2), OWN_TAIL(3), ENEMY_HEAD(4), ENEMY_BODY(5), ENEMY_TAIL(6), BARRIER(7), EMPTY(8),
+    A_O_OWN_HEAD(9), A_O_OWN_BODY(10), A_O_OWN_TAIL(11), A_O_ENEMY_HEAD(12), A_O_ENEMY_BODY(13), A_O_ENEMY_TAIL(14), A_O_BARRIER(15), A_O_EMPTY(16),
+    A_P_OWN_HEAD(17), A_P_OWN_BODY(18), A_P_OWN_TAIL(19), A_P_ENEMY_HEAD(20), A_P_ENEMY_BODY(21), A_P_ENEMY_TAIL(22), A_P_BARRIER(23), A_P_EMPTY(24),
+    OR_OWN_HEAD(25), OR_OWN_BODY(26), OR_OWN_TAIL(27), OR_ENEMY_HEAD(28), OR_ENEMY_BODY(29), OR_ENEMY_TAIL(30), OR_BARRIER(31), OR_EMPTY(32),
+    EXCEPT_OWN_HEAD(33), EXCEPT_OWN_BODY(34), EXCEPT_OWN_TAIL(35), EXCEPT_ENEMY_HEAD(36), EXCEPT_ENEMY_BODY(37), EXCEPT_ENEMY_TAIL(38), EXCEPT_BARRIER(39), EXCEPT_EMPTY(40);
     static final long serialVersionUID = 9213284845659098448L;
     public static ArrayList<Role> andOrangeRoles = new ArrayList<>();
     public static ArrayList<Role> andPinkRoles = new ArrayList<>();
     public static ArrayList<Role> orRoles = new ArrayList<>();
     public static ArrayList<Role> exceptRole = new ArrayList<>();
+
+    public static Role role(int key){
+        for(Role role : Role.values()) {
+            if(role.key == key){
+                return role;
+            }
+        }
+        return null;
+    }
+
+    public int key;
+    Role(int key){
+        this.key = key;
+    }
 
     public Role getRole() {
         switch (this) {
