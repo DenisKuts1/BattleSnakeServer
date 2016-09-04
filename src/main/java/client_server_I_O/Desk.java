@@ -130,43 +130,43 @@ public class Desk implements Serializable {
         return matrix[x][y].equals(Role.ENEMY_TAIL);
     }
 
-    public Card.Direction getRandomMove() {
+    public Game.Direction getRandomMove() {
         int headX = mainUser.getSnake().getBody().get(0).getX();
         int headY = mainUser.getSnake().getBody().get(0).getY();
-        ArrayList<Card.Direction> directions = new ArrayList<>();
+        ArrayList<Game.Direction> directions = new ArrayList<>();
         if (headX > 0) {
             if (matrix[headX - 1][headY].equals(Role.ENEMY_TAIL)) {
-                return Card.Direction.LEFT;
+                return Game.Direction.LEFT;
             } else {
-                directions.add(Card.Direction.LEFT);
+                directions.add(Game.Direction.LEFT);
             }
         }
         if (headY > 0) {
             if (matrix[headX][headY - 1].equals(Role.ENEMY_TAIL)) {
-                return Card.Direction.FORWARD;
+                return Game.Direction.TOP;
             } else {
-                directions.add(Card.Direction.FORWARD);
+                directions.add(Game.Direction.TOP);
             }
         }
         if (headX < 24) {
             if (matrix[headX + 1][headY].equals(Role.ENEMY_TAIL)) {
-                return Card.Direction.RIGHT;
+                return Game.Direction.RIGHT;
             } else {
-                directions.add(Card.Direction.RIGHT);
+                directions.add(Game.Direction.RIGHT);
             }
         }
         if (headY < 24) {
             if (matrix[headX][headY + 1].equals(Role.ENEMY_TAIL)) {
-                return Card.Direction.BACKWARD;
+                return Game.Direction.BOTTOM;
             } else {
-                directions.add(Card.Direction.BACKWARD);
+                directions.add(Game.Direction.BOTTOM);
             }
         }
         int size;
         if ((size = directions.size()) == 0) {
             return null;
         }
-        int random = new Random().nextInt(directions.size());
+        int random = new Random().nextInt(size);
         return directions.get(random);
     }
 }

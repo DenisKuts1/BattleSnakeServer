@@ -122,9 +122,9 @@ public class Game {
                     }
                 }
                 if (card != null) {
-                    moveSnake(desk, user, card.getDirection());
+                    moveSnake(desk, user, Direction.TOP);
                 } else {
-                    Card.Direction direction = desk.getRandomMove();
+                    Direction direction = desk.getRandomMove();
                     if (direction != null) {
                         moveSnake(desk, user, direction);
                     }
@@ -161,7 +161,7 @@ public class Game {
 
     }
 
-    private void moveSnake(Desk desk, User user, Card.Direction direction) {
+    private void moveSnake(Desk desk, User user, Direction direction) {
         int vectorX = 0;
         int vectorY = 0;
         switch (direction) {
@@ -169,7 +169,7 @@ public class Game {
                 vectorX = -1;
                 break;
             }
-            case FORWARD: {
+            case TOP: {
                 vectorY = -1;
                 break;
             }
@@ -177,7 +177,7 @@ public class Game {
                 vectorX = 1;
                 break;
             }
-            case BACKWARD: {
+            case BOTTOM: {
                 vectorY = 1;
             }
         }
@@ -259,26 +259,7 @@ public class Game {
 
 
     public Card rotate(Card card) {
-        Card.Direction d;
-        switch (card.getDirection()) {
-            case LEFT: {
-                d = Card.Direction.FORWARD;
-                break;
-            }
-            case FORWARD: {
-                d = Card.Direction.RIGHT;
-                break;
-            }
-            case RIGHT: {
-                d = Card.Direction.BACKWARD;
-                break;
-            }
-            default: {
-                d = Card.Direction.LEFT;
-            }
-
-        }
-        Card c = new Card(d);
+        Card c = new Card();
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 7; j++) {
                 c.getElements()[i][j].role = card.getElements()[j][7 - i - 1].role;

@@ -18,10 +18,9 @@ public class Card implements Serializable {
 
 
     CardElement[][] elements = new CardElement[7][7];
-    private Direction direction;
 
-    public Card(Direction direction) {
-        getDirection();
+    public Card() {
+
     }
 
     public CardElement[][] getElements() {
@@ -31,17 +30,4 @@ public class Card implements Serializable {
         this.elements = elements;
     }
 
-
-
-    public enum Direction implements Serializable {
-        LEFT, RIGHT, FORWARD, BACKWARD
-    }
-
-    public Direction getDirection() {
-        return direction;
-    }
-
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
 }
