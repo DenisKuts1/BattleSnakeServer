@@ -4,6 +4,8 @@ import client_server_I_O.classes.User;
 import javafx.application.Application;
 
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Random;
 
 /**
  * Created by Анатолий on 13.07.2016.
@@ -16,6 +18,7 @@ public class Main {
         } catch (IOException e) {
             System.out.println("fail");
         }
+
     }
 
 }

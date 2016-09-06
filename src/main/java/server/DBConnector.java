@@ -42,7 +42,7 @@ public class DBConnector {
             user.getSnake().setAbout("");
             user.getSnake().setAvatar(new Avatar());
             Random random = new Random();
-            String path = Paths.get("").toAbsolutePath().toUri().normalize().toString() + "resources/snake" + (random.nextInt(4) + 1) + ".png";
+            String path = Paths.get("").toAbsolutePath().toUri().normalize().toString() + "src/main/resources/snake" + (random.nextInt(4) + 1) + ".png";
             System.out.println(path);
             user.getSnake().getAvatar().setImageBytes(getBytesFromImage(path ));
             user.getSnake().setBody(new ArrayList<>());
