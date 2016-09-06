@@ -38,7 +38,7 @@ public class DBConnector {
             return false;
         } else {
             user.setSnake(new Snake());
-            user.getSnake().setRating(0);
+            user.getSnake().setRating(1000);
             user.getSnake().setAbout("");
             user.getSnake().setAvatar(new Avatar());
             Random random = new Random();
@@ -53,10 +53,10 @@ public class DBConnector {
                 for(int j = 0; j < 3; j++){
                     user.getSnake().getCards()[i][j] = new Card();
                     user.getSnake().getCards()[i][j].setElements(new CardElement[7][7]);
-                    for(int k = 0; k < 3; k++){
-                        for(int l = 0; l < 3; l++){
-                            user.getSnake().getCards()[i][j].getElements()[i][j] = new CardElement();
-
+                    for(int k = 0; k < 7; k++){
+                        for(int l = 0; l < 7; l++){
+                            user.getSnake().getCards()[i][j].getElements()[k][l] = new CardElement();
+                            user.getSnake().getCards()[i][j].getElements()[k][l].setRole(8);
                         }
                     }
                 }
