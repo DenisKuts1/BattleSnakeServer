@@ -11,16 +11,11 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) {
-        /*try {
+        try {
             Server server = new Server();
         } catch (IOException e) {
             System.out.println("fail");
-        }*/
-
-        User user = new User();
-        user.setPassword("123");
-        user.setLogin("123");
-        new DBConnector().addUser(user);
+        }
     }
 
 }
