@@ -1,6 +1,7 @@
 package server;
 
 import client_server_I_O.Game;
+import client_server_I_O.classes.Message;
 import client_server_I_O.classes.User;
 
 import java.io.*;
@@ -53,8 +54,8 @@ public class Session implements Runnable {
     public void run() {
         Message message;
         while ((message = readMessage()) != null) {
-            System.out.println(1);
             String firstUnit = (String) message.getUnit();
+            System.out.println(firstUnit);
             switch (firstUnit) {
                 case "add": {
                     addUser((User) message.getUnit());
@@ -133,6 +134,8 @@ public class Session implements Runnable {
     }
 
     private void getUser(String login, String password) {
+        System.out.println(login);
+        System.out.println(password);
         User user = connector.getUser(login, password);
         Message message = new Message(user);
         sendMessage(message);

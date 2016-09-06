@@ -1,10 +1,15 @@
 package server;
 
-import client_server_I_O.classes.Snake;
-import client_server_I_O.classes.User;
+import client_server_I_O.classes.*;
+import javafx.scene.paint.Color;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 /**
@@ -28,9 +33,34 @@ public class DBConnector {
     }
 
     public boolean addUser(User user) {
+        System.out.println(user.getPassword());
         if (userExists(user.getLogin())) {
             return false;
         } else {
+            user.setSnake(new Snake());
+            user.getSnake().setRating(0);
+            user.getSnake().setAbout("");
+            user.getSnake().setAvatar(new Avatar());
+            Random random = new Random();
+            String path = Paths.get("").toAbsolutePath().toUri().normalize().toString() + "resources/snake" + (random.nextInt(4) + 1) + ".png";
+            System.out.println(path);
+            user.getSnake().getAvatar().setImageBytes(getBytesFromImage(path ));
+            user.getSnake().setBody(new ArrayList<>());
+            user.getSnake().setColor(getRandomColor());
+            user.getSnake().setName("");
+            user.getSnake().setCards(new Card[3][3]);
+            for(int i = 0; i < 3; i++){
+                for(int j = 0; j < 3; j++){
+                    user.getSnake().getCards()[i][j] = new Card();
+                    user.getSnake().getCards()[i][j].setElements(new CardElement[7][7]);
+                    for(int k = 0; k < 3; k++){
+                        for(int l = 0; l < 3; l++){
+                            user.getSnake().getCards()[i][j].getElements()[i][j] = new CardElement();
+
+                        }
+                    }
+                }
+            }
             File userFile = new File("db\\users\\" + user.getLogin() + ".txt");
             try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(userFile))) {
                 outputStream.writeObject(user);
@@ -46,6 +76,25 @@ public class DBConnector {
             }
 
             return true;
+        }
+    }
+
+    private static String getRandomColor() {
+        double red = Math.random();
+        double green = Math.random();
+        double blue = Math.random();
+
+        return new Color(red,green,blue, 1.0).toString();
+    }
+
+    public static byte[] getBytesFromImage(String path) {
+        try {
+            BufferedImage image = ImageIO.read(new URL(path));
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", baos);
+            return baos.toByteArray();
+        } catch (IOException e) {
+            return null;
         }
     }
 
@@ -73,12 +122,14 @@ public class DBConnector {
         try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("db\\users\\" + username + ".txt"))) {
             System.out.println("db\\users\\" + username + ".txt");
             User user = (User) inputStream.readObject();
-            System.out.println(1);
+            System.out.println(user.getPassword());
             if (user.getPassword().equals(password)) {
                 return user;
-            } else return null;
+            } else {
+                return null;
+            }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println(1);
             return null;
         }
 

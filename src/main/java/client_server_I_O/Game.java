@@ -1,7 +1,7 @@
 package client_server_I_O;
 
 import client_server_I_O.classes.*;
-import server.Message;
+import client_server_I_O.classes.Message;
 import server.Session;
 
 
