@@ -68,7 +68,7 @@ public class Session implements Runnable {
                             break;
                         }
                         case "users": {
-                            getUsers();
+                            getUsers((String) message.getUnit());
                             break;
                         }
                         case "games": {
@@ -114,8 +114,8 @@ public class Session implements Runnable {
         sendMessage(message);
     }
 
-    private void getUsers() {
-        Message message = new Message(connector.getUsers());
+    private void getUsers(String login) {
+        Message message = new Message(connector.getUsers(login));
         sendMessage(message);
     }
 

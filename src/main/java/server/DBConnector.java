@@ -22,7 +22,7 @@ public class DBConnector {
 
 
     public DBConnector() {
-        usersFile = new File("db\\users.txt");
+        usersFile = new File("db\\users\\users.dat");
         if (!usersFile.exists()) {
             try {
                 usersFile.createNewFile();
@@ -168,11 +168,14 @@ public class DBConnector {
         return true;
     }
 
-    public ArrayList<Snake> getUsers() {
+    public ArrayList<Snake> getUsers(String login) {
         String name;
         ArrayList<Snake> arrayList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(usersFile))) {
             while ((name = reader.readLine()) != null) {
+                if(name.equals(login)){
+                    continue;
+                }
                 User user = getUser(name);
                 arrayList.add(user.getSnake());
             }
