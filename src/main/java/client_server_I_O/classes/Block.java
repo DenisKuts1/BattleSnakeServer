@@ -1,10 +1,11 @@
 package client_server_I_O.classes;
 
+import java.io.Serializable;
+
 /**
  * Created by Анатолий on 25.07.2016.
  */
-public class Block {
-    static final long serialVersionUID = 9213284845659098448L;
+public class Block implements Serializable {
     private int x,y;
 
     public Block(int x, int y) {

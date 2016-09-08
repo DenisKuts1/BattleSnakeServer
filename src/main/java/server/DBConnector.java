@@ -37,26 +37,31 @@ public class DBConnector {
         if (userExists(user.getLogin())) {
             return false;
         } else {
-            user.setSnake(new Snake());
-            user.getSnake().setRating(1000);
-            user.getSnake().setAbout("");
-            user.getSnake().setAvatar(new Avatar());
-            Random random = new Random();
-            String path = Paths.get("").toAbsolutePath().toUri().normalize().toString() + "src/main/resources/snake" + (random.nextInt(4) + 1) + ".png";
-            System.out.println(path);
-            user.getSnake().getAvatar().setImageBytes(getBytesFromImage(path ));
-            user.getSnake().setBody(new ArrayList<>());
-            user.getSnake().setColor(getRandomColor());
-            user.getSnake().setName("");
-            user.getSnake().setCards(new Card[3][3]);
-            for(int i = 0; i < 3; i++){
-                for(int j = 0; j < 3; j++){
-                    user.getSnake().getCards()[i][j] = new Card();
-                    user.getSnake().getCards()[i][j].setElements(new CardElement[7][7]);
-                    for(int k = 0; k < 7; k++){
-                        for(int l = 0; l < 7; l++){
-                            user.getSnake().getCards()[i][j].getElements()[k][l] = new CardElement();
-                            user.getSnake().getCards()[i][j].getElements()[k][l].setRole(8);
+            if(user.getSnake() == null) {
+                user.setSnake(new Snake());
+                user.getSnake().setRating(1000);
+                user.getSnake().setAbout("");
+                user.getSnake().setAvatar(new Avatar());
+                Random random = new Random();
+                String path = Paths.get("").toAbsolutePath().toUri().normalize().toString() + "src/main/resources/snake" + (random.nextInt(4) + 1) + ".png";
+                System.out.println(path);
+                user.getSnake().getAvatar().setImageBytes(getBytesFromImage(path));
+                user.getSnake().setBody(new ArrayList<>());
+                user.getSnake().setColor(getRandomColor());
+                user.getSnake().setName("Enter your name");
+                user.getSnake().setCards(new Card[3][3]);
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        user.getSnake().getCards()[i][j] = new Card();
+                        user.getSnake().getCards()[i][j].setElements(new CardElement[7][7]);
+                        for (int k = 0; k < 7; k++) {
+                            for (int l = 0; l < 7; l++) {
+                                user.getSnake().getCards()[i][j].getElements()[k][l] = new CardElement();
+                                user.getSnake().getCards()[i][j].getElements()[k][l].setRole(8);
+                                if(k == 3 && l == 3){
+                                    user.getSnake().getCards()[i][j].getElements()[k][l].setRole(1);
+                                }
+                            }
                         }
                     }
                 }

@@ -7,7 +7,6 @@ import java.util.ArrayList;
  * Created by Анатолий on 25.07.2016.
  */
 public class Snake implements Serializable {
-    static final long serialVersionUID = 9213284845659098448L;
 
     private ArrayList<Block> body;
     private Card[][] cards;

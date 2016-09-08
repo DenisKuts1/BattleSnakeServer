@@ -110,7 +110,8 @@ public class Session implements Runnable {
 
 
     private void updateUser(User user) {
-        connector.updateUser(user);
+        Message message = new Message(connector.updateUser(user));
+        sendMessage(message);
     }
 
     private void getUsers() {

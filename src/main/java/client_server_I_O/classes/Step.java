@@ -1,9 +1,10 @@
 package client_server_I_O.classes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Step {
+public class Step implements Serializable {
 
     private boolean isGameFinished;
     private Map<Integer, ArrayList<Block>> body;
