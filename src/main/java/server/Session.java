@@ -16,24 +16,6 @@ public class Session implements Runnable {
 
     private Socket socket;
     private DBConnector connector = new DBConnector();
-    private static ArrayList<Game> games = new ArrayList<>();
-    private static ArrayList<Integer> freePorts = new ArrayList<>();
-
-    static {
-        for (int i = 12346; i < 13346; i++) {
-            freePorts.add(i);
-        }
-    }
-
-    public static void stopGame(Game game, int port) {
-        synchronized (freePorts) {
-            freePorts.add(port);
-        }
-        synchronized (games) {
-            games.remove(game);
-        }
-
-    }
 
     public Session(Socket socket) throws IOException {
         this.socket = socket;
@@ -71,9 +53,6 @@ public class Session implements Runnable {
                             getUsers((String) message.getUnit());
                             break;
                         }
-                        case "games": {
-                            getGames();
-                        }
                     }
                     break;
                 }
@@ -91,21 +70,17 @@ public class Session implements Runnable {
     }
 
     private void startGame(String user1, String user2, String user3, String user4) {
-        int port;
-        synchronized (freePorts) {
-            port = freePorts.get(0);
-            freePorts.remove(0);
+        Game game;
+        if(user3 == null){
+            game = new Game(socket, connector.getUser(user1), connector.getUser(user2));
+
+        } else if(user4 == null){
+            game = new Game(socket, connector.getUser(user1), connector.getUser(user2), connector.getUser(user3));
+        } else {
+            game = new Game(socket, connector.getUser(user1), connector.getUser(user2), connector.getUser(user3), connector.getUser(user4));
         }
-        Game game = new Game(port,
-                connector.getUser(user1),
-                connector.getUser(user2),
-                connector.getUser(user3),
-                connector.getUser(user4));
-        Message message = new Message(port);
-        synchronized (games) {
-            games.add(game);
-        }
-        sendMessage(message);
+
+
     }
 
 
@@ -116,21 +91,6 @@ public class Session implements Runnable {
 
     private void getUsers(String login) {
         Message message = new Message(connector.getUsers(login));
-        sendMessage(message);
-    }
-
-    private void getGames() {
-        HashMap<Integer, String> names = new HashMap<>();
-        synchronized (games) {
-            for (Game game : games) {
-                String name = "";
-                for (User user : game.getUsers()) {
-                    name += user.getLogin() + " ";
-                }
-                names.put(game.getPort(), name);
-            }
-        }
-        Message message = new Message(names);
         sendMessage(message);
     }
 

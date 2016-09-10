@@ -20,63 +20,29 @@ import java.util.Map;
 public class Game {
     ArrayList<User> users;
     ArrayList<User> allUsers;
-    ArrayList<Socket> sockets;
+    Socket socket;
     boolean stop = false;
-    int port;
 
-    public int getPort() {
-        return port;
-    }
 
     public ArrayList<User> getUsers() {
         return users;
     }
 
-    public Game(int port, User... users) {
-        this.port = port;
+    public Game(Socket socket,User... users) {
+        this.socket = socket;
         this.users = new ArrayList<>();
-        sockets = new ArrayList<>();
         for (User user : users) {
             this.users.add(user);
         }
-        try {
-            ServerSocket serverSocket = new ServerSocket(port);
-            new Thread(() -> {
-                while (!stop) {
-                    try {
-                        sockets.add(serverSocket.accept());
-                    } catch (IOException e) {
-
-                    }
-                }
-
-            });
-        } catch (IOException e) {
-
-        }
-
-
         new Thread(this::loop).start();
 
 
     }
 
-    private void sendProgress(boolean isLast) {
-        Message message;
+    private void sendGame(ArrayList<Step> steps) {
+        Message message = new Message(steps);
+        send(socket, message);
 
-        Map<Integer, ArrayList<Block>> body = new HashMap<>();
-        for(int i = 0 ; i < 4; i++){
-            body.put(i,allUsers.get(i).getSnake().getBody());
-        }
-
-        Step step = new Step();
-        step.setBody(body);
-        step.setGameFinished(isLast);
-        message = new Message(step);
-
-        for (Socket socket : sockets) {
-            send(socket, message);
-        }
     }
 
     private void send(Socket socket, Message message) {
@@ -92,13 +58,28 @@ public class Game {
     private void loop() {
         Desk desk = new Desk();
         allUsers = (ArrayList<User>) users.clone();
+        int n = users.size();
         startPosition(users.get(0).getSnake(), Direction.TOP);
         startPosition(users.get(1).getSnake(), Direction.RIGHT);
-        startPosition(users.get(2).getSnake(), Direction.BOTTOM);
-        startPosition(users.get(3).getSnake(), Direction.LEFT);
+        if(n > 2) {
+            startPosition(users.get(2).getSnake(), Direction.BOTTOM);
+            if(n > 3) {
+                startPosition(users.get(3).getSnake(), Direction.LEFT);
+            }
+        }
 
+        ArrayList<Step> steps = new ArrayList<>();
+        int time = 0;
         while (!stop) {
-            for (User user : users) {
+            time++;
+            Step step = new Step();
+            step.setBody(new HashMap<>());
+            for(int i = 0; i < n; i++)
+            {
+                User user = users.get(i);
+                if(user == null){
+                    continue;
+                }
                 desk.clear();
                 for (User enemy : users) {
                     if (!enemy.equals(user)) {
@@ -108,34 +89,51 @@ public class Game {
                     }
                 }
                 Card card = null;
+                int jj = 0;
                 Label:
                 for (Card []cc : user.getSnake().getCards()) {
                     for (Card c : cc) {
-                        for (int i = 0; i < 3; i++) {
+                        jj = 0;
+                        for (int j = 0; j < 3; j++) {
                             if (desk.checkCard(c)) {
                                 card = c;
                                 break Label;
                             }
 
                             c = rotate(c);
+                            jj++;
                         }
                     }
                 }
                 if (card != null) {
-                    moveSnake(desk, user, Direction.TOP);
+                    switch (jj){
+                        case 0:{
+                            moveSnake(desk, user, Direction.TOP);
+                            break;
+                        }
+                        case 1:{
+                            moveSnake(desk, user, Direction.RIGHT);
+                            break;
+                        }
+                        case 2:{
+                            moveSnake(desk, user, Direction.BOTTOM);
+                            break;
+                        }
+                        default:{
+                            moveSnake(desk, user, Direction.LEFT);
+                            break;
+                        }
+                    }
+
                 } else {
-                    Direction direction = desk.getRandomMove();
-                    if (direction != null) {
+                    Direction direction;
+                    if((direction = desk.getRandomMove()) != null) {
                         moveSnake(desk, user, direction);
                     }
                 }
-                sendProgress(false);
-                try {
-                    Thread.sleep(1000);
-                } catch (Exception e) {
-
-                }
+                step.getBody().put(i,user.getSnake().getBody());
             }
+            steps.add(step);
 
             users.stream().filter(user -> user.getSnake().getBody().size() < 3).forEach(user -> users.remove(user));
             if (users.size() == 1) {
@@ -148,16 +146,18 @@ public class Game {
                     }
                 }
             }
-        }
-        sendProgress(true);
-        for (Socket socket : sockets) {
-            try {
-                socket.close();
-            } catch (IOException e) {
-
+            if(time == 200){
+                stop = true;
+                for(User user : allUsers){
+                    if(users.contains(user)){
+                        user.getSnake().setRating(user.getSnake().getRating() + 5);
+                    } else {
+                        user.getSnake().setRating(user.getSnake().getRating() - 5);
+                    }
+                }
             }
         }
-        Session.stopGame(this, port);
+        sendGame(steps);
 
     }
 
@@ -198,7 +198,6 @@ public class Game {
         }
     }
 
-    //private Direction direction;
     public void startPosition(Snake snake, Direction direction) {
         snake.getBody().clear();
         switch (direction) {
