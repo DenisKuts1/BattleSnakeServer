@@ -2,6 +2,7 @@ package client_server_I_O;
 
 import client_server_I_O.classes.*;
 import client_server_I_O.classes.Message;
+import server.DBConnector;
 import server.Session;
 
 
@@ -58,6 +59,7 @@ public class Game {
     private void loop() {
         Desk desk = new Desk();
         allUsers = (ArrayList<User>) users.clone();
+
         int n = users.size();
         startPosition(users.get(0).getSnake(), Direction.TOP);
         startPosition(users.get(1).getSnake(), Direction.RIGHT);
@@ -69,13 +71,13 @@ public class Game {
         }
 
         ArrayList<Turn> turns = new ArrayList<>();
-        Turn lastTurn;
         int time = 0;
+
+        GameEnd gameEnd = new GameEnd();
+        ArrayList<Integer> ratings = new ArrayList<>();
         while (!stop) {
             time++;
             Turn turn = new Turn();
-            lastTurn = turn;
-            lastTurn.setGameFinished(false);
             turn.setBody(new HashMap<>());
             for(int i = 0; i < n; i++)
             {
@@ -141,27 +143,38 @@ public class Game {
             users.stream().filter(user -> user.getSnake().getBody().size() < 3).forEach(user -> users.remove(user));
             if (users.size() == 1) {
                 stop = true;
-                lastTurn.setGameFinished(true);
+                int i = 0;
                 for(User user : allUsers){
                     if(user.equals(users.get(0))){
                         user.getSnake().setRating(user.getSnake().getRating() + 10);
+                        gameEnd.setSnakeWinner(i);
+
                     } else {
                         user.getSnake().setRating(user.getSnake().getRating() - 5);
                     }
+                    ratings.add(user.getSnake().getRating());
+                    DBConnector connector = new DBConnector();
+                    connector.updateUser(user);
+                    i++;
                 }
             }
             if(time == 200){
                 stop = true;
-                lastTurn.setGameFinished(true);
+                gameEnd.setSnakeWinner(-1);
                 for(User user : allUsers){
                     if(users.contains(user)){
                         user.getSnake().setRating(user.getSnake().getRating() + 5);
                     } else {
                         user.getSnake().setRating(user.getSnake().getRating() - 5);
                     }
+                    ratings.add(user.getSnake().getRating());
+                    DBConnector connector = new DBConnector();
+                    connector.updateUser(user);
                 }
             }
         }
+        gameEnd.setNewRatings(ratings);
+        turns.get(turns.size() - 1).setGameEnd(gameEnd);
         sendGame(turns);
 
     }

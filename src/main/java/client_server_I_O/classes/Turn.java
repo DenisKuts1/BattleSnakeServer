@@ -6,21 +6,19 @@ import java.util.Map;
 
 public class Turn implements Serializable {
 
-    private boolean isGameFinished;
+    private GameEnd gameEnd;
     private Map<Integer, ArrayList<Block>> body;
 
-    public boolean isGameFinished() {
-        return isGameFinished;
+    public GameEnd getGameEnd() {
+        return gameEnd;
     }
-
-    public void setGameFinished(boolean gameFinished) {
-        isGameFinished = gameFinished;
+    public void setGameEnd(GameEnd gameEnd) {
+        this.gameEnd = gameEnd;
     }
 
     public Map<Integer, ArrayList<Block>> getBody() {
         return body;
     }
-
     public void setBody(Map<Integer, ArrayList<Block>> body) {
         this.body = body;
     }
