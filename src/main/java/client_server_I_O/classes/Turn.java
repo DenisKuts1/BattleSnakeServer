@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Step implements Serializable {
+public class Turn implements Serializable {
 
     private boolean isGameFinished;
     private Map<Integer, ArrayList<Block>> body;
@@ -24,5 +24,6 @@ public class Step implements Serializable {
     public void setBody(Map<Integer, ArrayList<Block>> body) {
         this.body = body;
     }
+
 }
 

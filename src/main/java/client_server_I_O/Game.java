@@ -39,8 +39,8 @@ public class Game {
 
     }
 
-    private void sendGame(ArrayList<Step> steps) {
-        Message message = new Message(steps);
+    private void sendGame(ArrayList<Turn> turns) {
+        Message message = new Message(turns);
         send(socket, message);
 
     }
@@ -68,12 +68,15 @@ public class Game {
             }
         }
 
-        ArrayList<Step> steps = new ArrayList<>();
+        ArrayList<Turn> turns = new ArrayList<>();
+        Turn lastTurn;
         int time = 0;
         while (!stop) {
             time++;
-            Step step = new Step();
-            step.setBody(new HashMap<>());
+            Turn turn = new Turn();
+            lastTurn = turn;
+            lastTurn.setGameFinished(false);
+            turn.setBody(new HashMap<>());
             for(int i = 0; i < n; i++)
             {
                 User user = users.get(i);
@@ -131,13 +134,14 @@ public class Game {
                         moveSnake(desk, user, direction);
                     }
                 }
-                step.getBody().put(i,user.getSnake().getBody());
+                turn.getBody().put(i,user.getSnake().getBody());
             }
-            steps.add(step);
+            turns.add(turn);
 
             users.stream().filter(user -> user.getSnake().getBody().size() < 3).forEach(user -> users.remove(user));
             if (users.size() == 1) {
                 stop = true;
+                lastTurn.setGameFinished(true);
                 for(User user : allUsers){
                     if(user.equals(users.get(0))){
                         user.getSnake().setRating(user.getSnake().getRating() + 10);
@@ -148,6 +152,7 @@ public class Game {
             }
             if(time == 200){
                 stop = true;
+                lastTurn.setGameFinished(true);
                 for(User user : allUsers){
                     if(users.contains(user)){
                         user.getSnake().setRating(user.getSnake().getRating() + 5);
@@ -157,7 +162,7 @@ public class Game {
                 }
             }
         }
-        sendGame(steps);
+        sendGame(turns);
 
     }
 

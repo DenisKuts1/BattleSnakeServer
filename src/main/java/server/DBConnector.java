@@ -168,16 +168,16 @@ public class DBConnector {
         return true;
     }
 
-    public ArrayList<Snake> getUsers(String login) {
+    public ArrayList<User> getUsers(String login) {
         String name;
-        ArrayList<Snake> arrayList = new ArrayList<>();
+        ArrayList<User> arrayList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(usersFile))) {
             while ((name = reader.readLine()) != null) {
                 if(name.equals(login)){
                     continue;
                 }
                 User user = getUser(name);
-                arrayList.add(user.getSnake());
+                arrayList.add(user);
             }
         } catch (IOException e) {
         }
