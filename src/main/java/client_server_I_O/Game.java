@@ -160,16 +160,47 @@ public class Game {
             }
             if(time == 200){
                 stop = true;
-                gameEnd.setSnakeWinner(-1);
+                int maxSize = 0;
+
+                for(User user : users){
+                    if(user.getSnake().getBody().size() > maxSize){
+                        maxSize = user.getSnake().getBody().size();
+                    }
+                }
+                int i = 0;
+                for(User user : users){
+                    if(user.getSnake().getBody().size() == maxSize){
+                        i++;
+                    }
+                }
+                if(i > 1){
+                    gameEnd.setSnakeWinner(-1);
+                }
+                int jj = 0;
                 for(User user : allUsers){
                     if(users.contains(user)){
-                        user.getSnake().setRating(user.getSnake().getRating() + 5);
+                        if(i == 1){
+                            if(user.getSnake().getBody().size() == maxSize){
+                                user.getSnake().setRating(user.getSnake().getRating() + 10);
+                                gameEnd.setSnakeWinner(jj);
+                            } else {
+                                user.getSnake().setRating(user.getSnake().getRating() - 5);
+                            }
+                        } else {
+                            if(user.getSnake().getBody().size() == maxSize){
+                                user.getSnake().setRating(user.getSnake().getRating() + 5);
+                            } else {
+                                user.getSnake().setRating(user.getSnake().getRating() - 5);
+                            }
+                        }
                     } else {
                         user.getSnake().setRating(user.getSnake().getRating() - 5);
                     }
                     ratings.add(user.getSnake().getRating());
                     DBConnector connector = new DBConnector();
                     connector.updateUser(user);
+
+                    jj++;
                 }
             }
         }

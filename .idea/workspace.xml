@@ -106,8 +106,8 @@
       <file leaf-file-name="DBConnector.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/server/DBConnector.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="334">
-              <caret line="179" column="34" selection-start-line="179" selection-start-column="34" selection-end-line="179" selection-end-column="34" />
+            <state relative-caret-position="385">
+              <caret line="50" column="57" selection-start-line="50" selection-start-column="57" selection-end-line="50" selection-end-column="57" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -132,20 +132,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="136">
               <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-              <folding>
-                <element signature="e#299#300#0" expanded="false" />
-                <element signature="e#330#331#0" expanded="false" />
-                <element signature="e#378#379#0" expanded="false" />
-                <element signature="e#418#419#0" expanded="false" />
-                <element signature="e#449#450#0" expanded="false" />
-                <element signature="e#477#478#0" expanded="false" />
-                <element signature="e#518#519#0" expanded="false" />
-                <element signature="e#552#553#0" expanded="false" />
-                <element signature="e#584#585#0" expanded="false" />
-                <element signature="e#612#613#0" expanded="false" />
-                <element signature="e#654#655#0" expanded="false" />
-                <element signature="e#688#689#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -163,8 +150,8 @@
       <file leaf-file-name="Game.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/client_server_I_O/Game.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2737">
-              <caret line="176" column="56" selection-start-line="176" selection-start-column="56" selection-end-line="176" selection-end-column="56" />
+            <state relative-caret-position="368">
+              <caret line="202" column="25" selection-start-line="202" selection-start-column="25" selection-end-line="202" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -243,9 +230,9 @@
         <option value="$PROJECT_DIR$/src/main/java/server/Main.java" />
         <option value="$PROJECT_DIR$/src/main/java/server/Session.java" />
         <option value="$PROJECT_DIR$/src/main/java/client_server_I_O/classes/Step.java" />
-        <option value="$PROJECT_DIR$/src/main/java/server/DBConnector.java" />
         <option value="$PROJECT_DIR$/src/main/java/client_server_I_O/classes/GameEnd.java" />
         <option value="$PROJECT_DIR$/src/main/java/client_server_I_O/classes/Turn.java" />
+        <option value="$PROJECT_DIR$/src/main/java/server/DBConnector.java" />
         <option value="$PROJECT_DIR$/src/main/java/client_server_I_O/Game.java" />
       </list>
     </option>
@@ -880,12 +867,12 @@
       <workItem from="1473349492311" duration="1186000" />
       <workItem from="1473355586092" duration="4317000" />
       <workItem from="1473507218213" duration="4022000" />
-      <workItem from="1473592333959" duration="1736000" />
+      <workItem from="1473592333959" duration="2869000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="100935000" />
+    <option name="totallyTimeSpent" value="102068000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="7" />
@@ -1320,42 +1307,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/client_server_I_O/classes/User.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding>
-            <element signature="e#299#300#0" expanded="false" />
-            <element signature="e#330#331#0" expanded="false" />
-            <element signature="e#378#379#0" expanded="false" />
-            <element signature="e#418#419#0" expanded="false" />
-            <element signature="e#449#450#0" expanded="false" />
-            <element signature="e#477#478#0" expanded="false" />
-            <element signature="e#518#519#0" expanded="false" />
-            <element signature="e#552#553#0" expanded="false" />
-            <element signature="e#584#585#0" expanded="false" />
-            <element signature="e#612#613#0" expanded="false" />
-            <element signature="e#654#655#0" expanded="false" />
-            <element signature="e#688#689#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/server/Session.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="92" column="52" selection-start-line="92" selection-start-column="52" selection-end-line="92" selection-end-column="52" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/server/DBConnector.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="334">
-          <caret line="179" column="34" selection-start-line="179" selection-start-column="34" selection-end-line="179" selection-end-column="34" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1385,10 +1341,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/client_server_I_O/classes/User.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/server/DBConnector.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="385">
+          <caret line="50" column="57" selection-start-line="50" selection-start-column="57" selection-end-line="50" selection-end-column="57" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/client_server_I_O/Game.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2737">
-          <caret line="176" column="56" selection-start-line="176" selection-start-column="56" selection-end-line="176" selection-end-column="56" />
+        <state relative-caret-position="368">
+          <caret line="202" column="25" selection-start-line="202" selection-start-column="25" selection-end-line="202" selection-end-column="25" />
           <folding />
         </state>
       </provider>

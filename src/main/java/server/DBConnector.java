@@ -48,7 +48,7 @@ public class DBConnector {
                 user.getSnake().getAvatar().setImageBytes(getBytesFromImage(path));
                 user.getSnake().setBody(new ArrayList<>());
                 user.getSnake().setColor(getRandomColor());
-                user.getSnake().setName("Enter your name");
+                user.getSnake().setName(user.getLogin());
                 user.getSnake().setCards(new Card[3][3]);
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {
