@@ -8,6 +8,8 @@ import java.util.ArrayList;
  */
 public class Snake implements Serializable {
 
+    static final long serialVersionUID = 4566843898265039363l;
+
     private ArrayList<Block> body;
     private Card[][] cards;
 

@@ -7,6 +7,8 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
 
+    static final long serialVersionUID = 4566843898265039363l;
+
     private String login;
     private String password;
     private Snake snake;

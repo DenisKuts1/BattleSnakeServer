@@ -13,6 +13,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -29,9 +30,10 @@ public class Game {
         return users;
     }
 
-    public Game(Socket socket,User... users) {
+    public Game(Socket socket, User... users) {
         this.socket = socket;
         this.users = new ArrayList<>();
+        this.allUsers = new ArrayList<>();
         for (User user : users) {
             this.users.add(user);
         }
@@ -41,6 +43,12 @@ public class Game {
     }
 
     private void sendGame(ArrayList<Turn> turns) {
+        for(Turn turn1 : turns) {
+            for (Block block : turn1.getBody().get(0)) {
+                System.out.println(block.getX() + " " + block.getY());
+            }
+            System.out.println();
+        }
         Message message = new Message(turns);
         send(socket, message);
 
@@ -51,21 +59,22 @@ public class Game {
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.writeObject(message);
             outputStream.flush();
+            System.out.println(0);
         } catch (IOException e) {
-
+            System.out.println(1);
         }
     }
 
     private void loop() {
         Desk desk = new Desk();
-        allUsers = (ArrayList<User>) users.clone();
+        allUsers.addAll(users);
 
         int n = users.size();
         startPosition(users.get(0).getSnake(), Direction.TOP);
         startPosition(users.get(1).getSnake(), Direction.RIGHT);
-        if(n > 2) {
+        if (n > 2) {
             startPosition(users.get(2).getSnake(), Direction.BOTTOM);
-            if(n > 3) {
+            if (n > 3) {
                 startPosition(users.get(3).getSnake(), Direction.LEFT);
             }
         }
@@ -75,14 +84,19 @@ public class Game {
 
         GameEnd gameEnd = new GameEnd();
         ArrayList<Integer> ratings = new ArrayList<>();
+        Turn turn;
         while (!stop) {
             time++;
-            Turn turn = new Turn();
-            turn.setBody(new HashMap<>());
-            for(int i = 0; i < n; i++)
-            {
-                User user = users.get(i);
-                if(user == null){
+            turn = new Turn();
+            turn.setBody(new LinkedHashMap<>());
+            /*System.out.println();
+            for (User user : users) {
+                System.out.println(user.getSnake().getBody().size());
+            }*/
+
+            for (int i = 0; i < n; i++) {
+                User user = allUsers.get(i);
+                if (!users.contains(user)) {
                     continue;
                 }
                 desk.clear();
@@ -96,7 +110,7 @@ public class Game {
                 Card card = null;
                 int jj = 0;
                 Label:
-                for (Card []cc : user.getSnake().getCards()) {
+                for (Card[] cc : user.getSnake().getCards()) {
                     for (Card c : cc) {
                         jj = 0;
                         for (int j = 0; j < 3; j++) {
@@ -111,20 +125,20 @@ public class Game {
                     }
                 }
                 if (card != null) {
-                    switch (jj){
-                        case 0:{
+                    switch (jj) {
+                        case 0: {
                             moveSnake(desk, user, Direction.TOP);
                             break;
                         }
-                        case 1:{
+                        case 1: {
                             moveSnake(desk, user, Direction.RIGHT);
                             break;
                         }
-                        case 2:{
+                        case 2: {
                             moveSnake(desk, user, Direction.BOTTOM);
                             break;
                         }
-                        default:{
+                        default: {
                             moveSnake(desk, user, Direction.LEFT);
                             break;
                         }
@@ -132,20 +146,27 @@ public class Game {
 
                 } else {
                     Direction direction;
-                    if((direction = desk.getRandomMove()) != null) {
+                    if ((direction = desk.getRandomMove()) != null) {
                         moveSnake(desk, user, direction);
                     }
                 }
-                turn.getBody().put(i,user.getSnake().getBody());
+                ArrayList<Block> copyBlock = new ArrayList<>();
+                for (Block block : user.getSnake().getBody()){
+                    copyBlock.add(new Block(block.getX(), block.getY()));
+                }
+                turn.getBody().put(i, copyBlock);
             }
+
             turns.add(turn);
 
-            users.stream().filter(user -> user.getSnake().getBody().size() < 3).forEach(user -> users.remove(user));
+            ArrayList<User> deletedUsers = new ArrayList<>();
+            users.stream().filter(user -> user.getSnake().getBody().size() < 3).forEach(deletedUsers::add);
+            users.removeAll(deletedUsers);
             if (users.size() == 1) {
                 stop = true;
                 int i = 0;
-                for(User user : allUsers){
-                    if(user.equals(users.get(0))){
+                for (User user : allUsers) {
+                    if (user.equals(users.get(0))) {
                         user.getSnake().setRating(user.getSnake().getRating() + 10);
                         gameEnd.setSnakeWinner(i);
 
@@ -158,36 +179,38 @@ public class Game {
                     i++;
                 }
             }
-            if(time == 200){
+            if (time == 200) {
                 stop = true;
                 int maxSize = 0;
 
-                for(User user : users){
-                    if(user.getSnake().getBody().size() > maxSize){
+                for (User user : users) {
+                    if (user.getSnake().getBody().size() > maxSize) {
                         maxSize = user.getSnake().getBody().size();
                     }
                 }
+                System.out.println(maxSize);
                 int i = 0;
-                for(User user : users){
-                    if(user.getSnake().getBody().size() == maxSize){
+                for (User user : users) {
+                    if (user.getSnake().getBody().size() == maxSize) {
                         i++;
                     }
                 }
-                if(i > 1){
+                System.out.println(i);
+                if (i > 1) {
                     gameEnd.setSnakeWinner(-1);
                 }
                 int jj = 0;
-                for(User user : allUsers){
-                    if(users.contains(user)){
-                        if(i == 1){
-                            if(user.getSnake().getBody().size() == maxSize){
+                for (User user : allUsers) {
+                    if (users.contains(user)) {
+                        if (i == 1) {
+                            if (user.getSnake().getBody().size() == maxSize) {
                                 user.getSnake().setRating(user.getSnake().getRating() + 10);
                                 gameEnd.setSnakeWinner(jj);
                             } else {
                                 user.getSnake().setRating(user.getSnake().getRating() - 5);
                             }
                         } else {
-                            if(user.getSnake().getBody().size() == maxSize){
+                            if (user.getSnake().getBody().size() == maxSize) {
                                 user.getSnake().setRating(user.getSnake().getRating() + 5);
                             } else {
                                 user.getSnake().setRating(user.getSnake().getRating() - 5);
@@ -206,6 +229,7 @@ public class Game {
         }
         gameEnd.setNewRatings(ratings);
         turns.get(turns.size() - 1).setGameEnd(gameEnd);
+        System.out.println("Turns ready");
         sendGame(turns);
 
     }
@@ -235,11 +259,11 @@ public class Game {
         if (canEat) {
             for (User enemy : users) {
                 if (!enemy.equals(user)) {
-                    int x = enemy.getSnake().getBody().get(enemy.getSnake().getBody().size()).getX();
-                    int y = enemy.getSnake().getBody().get(enemy.getSnake().getBody().size()).getY();
+                    int x = enemy.getSnake().getBody().get(enemy.getSnake().getBody().size() - 1).getX();
+                    int y = enemy.getSnake().getBody().get(enemy.getSnake().getBody().size() - 1).getY();
                     int userX = user.getSnake().getBody().get(0).getX();
                     int userY = user.getSnake().getBody().get(0).getY();
-                    if (userX + vectorX == x && userY + vectorY == y) {
+                    if (userX == x && userY == y) {
                         gotEaten(enemy.getSnake());
                     }
                 }
@@ -248,7 +272,11 @@ public class Game {
     }
 
     public void startPosition(Snake snake, Direction direction) {
-        snake.getBody().clear();
+        if (snake.getBody() == null) {
+            snake.setBody(new ArrayList<>());
+        } else {
+            snake.getBody().clear();
+        }
         switch (direction) {
             case TOP: {
                 snake.getBody().add(new Block(12, 4));
@@ -297,8 +325,8 @@ public class Game {
         }
     }
 
-    public void gotEaten(Snake snake){
-        snake.getBody().remove(snake.getBody().size()-1);
+    public void gotEaten(Snake snake) {
+        snake.getBody().remove(snake.getBody().size() - 1);
     }
 
     public enum Direction implements Serializable {
@@ -308,8 +336,10 @@ public class Game {
 
     public Card rotate(Card card) {
         Card c = new Card();
+        c.setElements(new CardElement[7][7]);
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 7; j++) {
+                c.getElements()[i][j] = new CardElement();
                 c.getElements()[i][j].role = card.getElements()[j][7 - i - 1].role;
             }
         }

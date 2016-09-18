@@ -6,6 +6,8 @@ import java.util.Map;
 
 public class Turn implements Serializable {
 
+    static final long serialVersionUID = 4566843898265039363l;
+
     private GameEnd gameEnd;
     private Map<Integer, ArrayList<Block>> body;
 

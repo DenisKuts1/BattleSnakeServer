@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class CardElement implements Serializable {
 
+    static final long serialVersionUID = 4566843898265039363l;
+
     public int role;
 
     public CardElement() {}

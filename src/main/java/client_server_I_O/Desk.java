@@ -137,28 +137,28 @@ public class Desk implements Serializable {
         if (headX > 0) {
             if (matrix[headX - 1][headY].equals(Role.ENEMY_TAIL)) {
                 return Game.Direction.LEFT;
-            } else {
+            } else if (matrix[headX - 1][headY].equals(Role.EMPTY)) {
                 directions.add(Game.Direction.LEFT);
             }
         }
         if (headY > 0) {
             if (matrix[headX][headY - 1].equals(Role.ENEMY_TAIL)) {
                 return Game.Direction.TOP;
-            } else {
+            } else if (matrix[headX][headY - 1].equals(Role.EMPTY)) {
                 directions.add(Game.Direction.TOP);
             }
         }
         if (headX < 24) {
             if (matrix[headX + 1][headY].equals(Role.ENEMY_TAIL)) {
                 return Game.Direction.RIGHT;
-            } else {
+            } else if (matrix[headX + 1][headY].equals(Role.EMPTY)) {
                 directions.add(Game.Direction.RIGHT);
             }
         }
         if (headY < 24) {
             if (matrix[headX][headY + 1].equals(Role.ENEMY_TAIL)) {
                 return Game.Direction.BOTTOM;
-            } else {
+            } else if (matrix[headX][headY + 1].equals(Role.EMPTY)) {
                 directions.add(Game.Direction.BOTTOM);
             }
         }

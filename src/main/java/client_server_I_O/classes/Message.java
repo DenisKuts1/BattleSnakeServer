@@ -9,6 +9,8 @@ import java.util.Queue;
  * Created by denak on 24.08.2016.
  */
 public class Message implements Serializable {
+
+    static final long serialVersionUID = 4566843898265039363l;
     private Queue<Object> parcel = new LinkedList<>();
 
     public Message() {}

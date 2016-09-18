@@ -5,6 +5,8 @@ import java.io.Serializable;
 
 public class Avatar implements Serializable {
 
+    static final long serialVersionUID = 4566843898265039363l;
+
     byte[] imageBytes;
 
     public Avatar() {}

@@ -8,6 +8,8 @@ import java.util.ArrayList;
  */
 public class GameEnd implements Serializable {
 
+    static final long serialVersionUID = 4566843898265039363l;
+
     private int snakeWinner;
     private ArrayList<Integer> newRatings;
 
