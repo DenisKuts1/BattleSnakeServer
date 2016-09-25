@@ -14,17 +14,19 @@ import java.util.Random;
  */
 public class Desk implements Serializable {
 
+
+    public static final int n = 12;
     private Role matrix[][];
     private User mainUser;
 
     public Desk() {
-        matrix = new Role[25][25];
+        matrix = new Role[n][n];
         clear();
     }
 
     public void clear() {
-        for (int i = 0; i < 25; i++) {
-            for (int j = 0; j < 25; j++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
                 matrix[i][j] = Role.EMPTY;
             }
         }
@@ -37,7 +39,7 @@ public class Desk implements Serializable {
         x = snake.get(0).getX();
         y = snake.get(0).getY();
         matrix[x][y] = Role.OWN_HEAD;
-        for (int i = 0; i < snake.size() - 2; i++) {
+        for (int i = 1; i < snake.size() - 1; i++) {
             x = snake.get(i).getX();
             y = snake.get(i).getY();
             matrix[x][y] = Role.OWN_BODY;
@@ -53,7 +55,7 @@ public class Desk implements Serializable {
         x = snake.get(0).getX();
         y = snake.get(0).getY();
         matrix[x][y] = Role.ENEMY_HEAD;
-        for (int i = 0; i < snake.size() - 2; i++) {
+        for (int i = 1; i < snake.size() - 1; i++) {
             x = snake.get(i).getX();
             y = snake.get(i).getY();
             matrix[x][y] = Role.ENEMY_BODY;
@@ -86,7 +88,7 @@ public class Desk implements Serializable {
                 Role deskRole;
                 int x = startX + i;
                 int y = startY + j;
-                if (x < 0 || x > 24 || y < 0 || y > 24) {
+                if (x < 0 || x > n - 1 || y < 0 || y > n - 1) {
                     deskRole = Role.BARRIER;
                 } else {
                     deskRole = matrix[x][y];
@@ -131,6 +133,30 @@ public class Desk implements Serializable {
     }
 
     public Game.Direction getRandomMove() {
+       /* System.out.println();
+        System.out.println();
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                if(matrix[i][j].equals(Role.ENEMY_HEAD)){
+                    System.out.println("EH " + i + j);
+                }
+                if(matrix[i][j].equals(Role.ENEMY_BODY)){
+                    System.out.println("EB " + i + j);
+                }
+                if(matrix[i][j].equals(Role.ENEMY_TAIL)){
+                    System.out.println("ET " + i + j);
+                }
+                if(matrix[i][j].equals(Role.OWN_HEAD)){
+                    System.out.println("OH " + i + j);
+                }
+                if(matrix[i][j].equals(Role.OWN_BODY)){
+                    System.out.println("OB " + i + j);
+                }
+                if(matrix[i][j].equals(Role.OWN_TAIL)){
+                    System.out.println("OT " + i + j);
+                }
+            }
+        }*/
         int headX = mainUser.getSnake().getBody().get(0).getX();
         int headY = mainUser.getSnake().getBody().get(0).getY();
         ArrayList<Game.Direction> directions = new ArrayList<>();
@@ -148,14 +174,14 @@ public class Desk implements Serializable {
                 directions.add(Game.Direction.TOP);
             }
         }
-        if (headX < 24) {
+        if (headX < n - 1) {
             if (matrix[headX + 1][headY].equals(Role.ENEMY_TAIL)) {
                 return Game.Direction.RIGHT;
             } else if (matrix[headX + 1][headY].equals(Role.EMPTY)) {
                 directions.add(Game.Direction.RIGHT);
             }
         }
-        if (headY < 24) {
+        if (headY < n - 1) {
             if (matrix[headX][headY + 1].equals(Role.ENEMY_TAIL)) {
                 return Game.Direction.BOTTOM;
             } else if (matrix[headX][headY + 1].equals(Role.EMPTY)) {

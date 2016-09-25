@@ -43,12 +43,12 @@ public class Game {
     }
 
     private void sendGame(ArrayList<Turn> turns) {
-        for(Turn turn1 : turns) {
+        /*for(Turn turn1 : turns) {
             for (Block block : turn1.getBody().get(0)) {
                 System.out.println(block.getX() + " " + block.getY());
             }
             System.out.println();
-        }
+        }*/
         Message message = new Message(turns);
         send(socket, message);
 
@@ -59,9 +59,7 @@ public class Game {
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.writeObject(message);
             outputStream.flush();
-            System.out.println(0);
         } catch (IOException e) {
-            System.out.println(1);
         }
     }
 
@@ -93,7 +91,6 @@ public class Game {
             for (User user : users) {
                 System.out.println(user.getSnake().getBody().size());
             }*/
-
             for (int i = 0; i < n; i++) {
                 User user = allUsers.get(i);
                 if (!users.contains(user)) {
@@ -101,7 +98,7 @@ public class Game {
                 }
                 desk.clear();
                 for (User enemy : users) {
-                    if (!enemy.equals(user)) {
+                    if (enemy!=user) {
                         desk.drawEnemy(enemy);
                     } else {
                         desk.drawUser(user);
@@ -125,6 +122,7 @@ public class Game {
                     }
                 }
                 if (card != null) {
+                    System.out.println(1);
                     switch (jj) {
                         case 0: {
                             moveSnake(desk, user, Direction.TOP);
@@ -154,13 +152,18 @@ public class Game {
                 for (Block block : user.getSnake().getBody()){
                     copyBlock.add(new Block(block.getX(), block.getY()));
                 }
+
                 turn.getBody().put(i, copyBlock);
             }
-
+            int ii = 0;
+            for(User user : users){
+                ii+=user.getSnake().getBody().size();
+            }
+            System.out.println(ii);
             turns.add(turn);
 
             ArrayList<User> deletedUsers = new ArrayList<>();
-            users.stream().filter(user -> user.getSnake().getBody().size() < 3).forEach(deletedUsers::add);
+            users.stream().filter(user -> user.getSnake().getBody().size() < 2).forEach(deletedUsers::add);
             users.removeAll(deletedUsers);
             if (users.size() == 1) {
                 stop = true;
@@ -195,7 +198,6 @@ public class Game {
                         i++;
                     }
                 }
-                System.out.println(i);
                 if (i > 1) {
                     gameEnd.setSnakeWinner(-1);
                 }
@@ -229,7 +231,6 @@ public class Game {
         }
         gameEnd.setNewRatings(ratings);
         turns.get(turns.size() - 1).setGameEnd(gameEnd);
-        System.out.println("Turns ready");
         sendGame(turns);
 
     }
@@ -265,6 +266,7 @@ public class Game {
                     int userY = user.getSnake().getBody().get(0).getY();
                     if (userX == x && userY == y) {
                         gotEaten(enemy.getSnake());
+                        break;
                     }
                 }
             }
@@ -279,35 +281,35 @@ public class Game {
         }
         switch (direction) {
             case TOP: {
-                snake.getBody().add(new Block(12, 4));
-                snake.getBody().add(new Block(12, 3));
-                snake.getBody().add(new Block(12, 2));
-                snake.getBody().add(new Block(12, 1));
-                snake.getBody().add(new Block(12, 0));
+                snake.getBody().add(new Block((Desk.n - 1) / 2, 4));
+                snake.getBody().add(new Block((Desk.n - 1) / 2, 3));
+                snake.getBody().add(new Block((Desk.n - 1) / 2, 2));
+                snake.getBody().add(new Block((Desk.n - 1) / 2, 1));
+                snake.getBody().add(new Block((Desk.n - 1) / 2, 0));
                 break;
             }
             case BOTTOM: {
-                snake.getBody().add(new Block(13, 20));
-                snake.getBody().add(new Block(13, 21));
-                snake.getBody().add(new Block(13, 22));
-                snake.getBody().add(new Block(13, 23));
-                snake.getBody().add(new Block(13, 24));
+                snake.getBody().add(new Block((Desk.n - 1) / 2 + 1, (Desk.n ) - 5));
+                snake.getBody().add(new Block((Desk.n - 1) / 2 + 1, (Desk.n ) - 4));
+                snake.getBody().add(new Block((Desk.n - 1) / 2 + 1, (Desk.n ) - 3));
+                snake.getBody().add(new Block((Desk.n - 1) / 2 + 1, (Desk.n ) - 2));
+                snake.getBody().add(new Block((Desk.n - 1) / 2 + 1, (Desk.n ) - 1));
                 break;
             }
             case LEFT: {
-                snake.getBody().add(new Block(4, 12));
-                snake.getBody().add(new Block(3, 12));
-                snake.getBody().add(new Block(2, 12));
-                snake.getBody().add(new Block(1, 12));
-                snake.getBody().add(new Block(0, 12));
+                snake.getBody().add(new Block(4, (Desk.n - 1) / 2));
+                snake.getBody().add(new Block(3, (Desk.n - 1) / 2));
+                snake.getBody().add(new Block(2, (Desk.n - 1) / 2));
+                snake.getBody().add(new Block(1, (Desk.n - 1) / 2));
+                snake.getBody().add(new Block(0, (Desk.n - 1) / 2));
                 break;
             }
             case RIGHT: {
-                snake.getBody().add(new Block(20, 13));
-                snake.getBody().add(new Block(21, 13));
-                snake.getBody().add(new Block(22, 13));
-                snake.getBody().add(new Block(23, 13));
-                snake.getBody().add(new Block(24, 13));
+                snake.getBody().add(new Block((Desk.n ) - 5, (Desk.n - 1) / 2 + 1));
+                snake.getBody().add(new Block((Desk.n ) - 4, (Desk.n - 1) / 2 + 1));
+                snake.getBody().add(new Block((Desk.n ) - 3, (Desk.n - 1) / 2 + 1));
+                snake.getBody().add(new Block((Desk.n ) - 2, (Desk.n - 1) / 2 + 1));
+                snake.getBody().add(new Block((Desk.n ) - 1, (Desk.n - 1) / 2 + 1));
             }
         }
     }
@@ -318,10 +320,17 @@ public class Game {
         if (hasEaten) {
             snake.getBody().add(0, new Block(x, y));
         } else {
+            ArrayList<Block> list = new ArrayList<>();
+            list.add(new Block(x, y));
+            for(int i = 0; i < snake.getBody().size() - 1; i++){
+                list.add(snake.getBody().get(i));
+            }
+            snake.setBody(list);
+            /*
             snake.getBody().get(snake.getBody().size() - 1).setX(x);
             snake.getBody().get(snake.getBody().size() - 1).setY(y);
             snake.getBody().add(0, snake.getBody().get(snake.getBody().size() - 1));
-            snake.getBody().remove(snake.getBody().size() - 1);
+            snake.getBody().remove(snake.getBody().size() - 1);*/
         }
     }
 
